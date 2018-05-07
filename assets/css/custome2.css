@@ -1,0 +1,408 @@
+.no-border-radius{
+    border-radius: 0 !important;
+}
+
+.top-112{
+    top: 112px;
+}
+
+.pdd-btm-52{
+    padding-bottom: 52px;
+}
+
+.text-al-left{
+    text-align: left;
+}
+
+.text-al-center{
+    text-align: center;
+}
+
+.text-al-right{
+    text-align: right;
+}
+
+/*slider modification*/
+body {
+    background-color: #313131;
+}
+
+.carousel-inner > .item {
+    height: 70vh;
+}
+
+.carousel-inner > .item > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    max-height: 550px;
+    width: auto;
+}
+
+.carousel-caption{
+    top: 80px;
+    padding-top: 0px;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+}
+
+ol, ul {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/*slider modification end*/
+
+/*Button*/
+
+.btn-default-onslider{
+    opacity: .8;
+    border: 1px solid #e4e7ea;
+    background: transparent;
+    padding: 5px 20px;
+}
+
+.btn-default-onslider:hover {
+    opacity: .8;
+    border: 1px solid #e4e7ea;
+    background: #e4e7ea;
+    padding: 5px 20px;
+}
+
+.set-position{
+    position: -webkit-sticky;
+    position: sticky;
+    float: right;
+    top: 225px;
+    /*left: 600px;*/
+}
+
+/*Button End*/
+
+/*Font*/
+
+
+
+/*font-family: 'Roboto', sans-serif;*/
+
+/*font-family: 'Montserrat', sans-serif;*/
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-family: 'Roboto', sans-serif;
+}
+
+.font-montserrat{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.font-4vw{
+    font-size: 4vw;
+}
+
+.font-3vw{
+    font-size: 3vw;
+}
+
+.font-2vw{
+    font-size: 2vw;
+}
+
+.font-1vw{
+    font-size: 1vw;
+}
+
+.font-19{
+    font-size: 19px;
+}
+
+.font-25{
+    font-size: 25px;
+}
+
+.font-28{
+    font-size: 28px;
+}
+
+
+/*Font End*/
+
+/*!*Font-Wt*/
+.font-wt-600{
+    font-weight: 600;
+}
+
+.font-wt-500{
+    font-weight: 500;
+}
+
+.font-wt-400{
+    font-weight: 400;
+}
+
+.font-wt-300{
+    font-weight: 300;
+}
+
+.font-wt-200{
+    font-weight: 200;
+}
+
+
+/*Font-Wt End*/
+
+/*Border*/
+
+.border-left-dot{
+    border-left: 1px dashed silver;
+}
+
+.border-right-dot{
+    border-right: 1px dashed silver;
+}
+
+
+.border-btn{
+    border-color: white;
+    /*border-width: 5px;*/
+    background-color: transparent;
+}
+
+/*Border End*/
+
+/*Margin*/
+
+.margin-btm-19{
+    margin-bottom: 19px;
+}
+
+.margin-btm-20{
+    margin-bottom: 20px;
+}
+
+.margin-btm-25{
+    margin-bottom: 25px;
+}
+
+.margin-btm-28{
+    margin-bottom: 28px;
+}
+
+.margin-btm-30{
+    margin-bottom: 30px;
+}
+
+/*Margin End*/
+
+/*Padding*/
+
+.pdd-menu-bar{
+    padding: 15px 18px !important;
+}
+
+.no-padding-left{
+    padding-left: 0;
+}
+
+.no-padding-right{
+    padding-right: 0;
+}
+
+.top-1{
+    top:1px;
+}
+
+.top-5{
+    top:5px;
+}
+
+.top-10{
+    top:10px;
+}
+
+
+.top-20{
+    top:20px;
+}
+
+.top-46{
+    top:46px;
+}
+
+.top-82{
+    top:82px;
+}
+
+.bottom-46{
+    bottom:46px;
+}
+
+.top-pdd-10{
+    padding-top: 10px;
+}
+
+.top-pdd-15{
+    padding-top: 15px;
+}
+
+.top-pdd-20{
+    padding-top: 20px;
+}
+
+.top-pdd-25{
+    padding-top: 25px;
+}
+
+.top-pdd-30{
+    padding-top: 30px;
+}
+
+.top-pdd-35{
+    padding-top: 35px;
+}
+
+.top-pdd-40{
+    padding-top: 40px;
+}
+
+.btm-pdd-10{
+    padding-bottom: 10px;
+}
+
+.btm-pdd-15{
+    padding-bottom: 15px;
+}
+
+.btm-pdd-20{
+    padding-bottom: 20px;
+}
+
+.btm-pdd-25{
+    padding-bottom: 25px;
+}
+
+.btm-pdd-30{
+    padding-bottom: 30px;
+}
+
+.btm-pdd-35{
+    padding-bottom: 35px;
+}
+
+.btm-pdd-40{
+    padding-bottom: 40px;
+}
+
+
+.top-pdd-52{
+    padding-top: 52px;
+}
+
+.top-pdd-55{
+    padding-top: 55px;
+}
+
+/*Padding End*/
+
+/*Imgae*/
+
+#img-logo{
+    width: 95%;
+    height: auto;
+}
+
+/*Image End*/
+
+/*Height*/
+
+.ver-middle{
+    vertical-align: middle;
+}
+
+.line-ht-120{
+    line-height: 120px;
+}
+
+.ht-82{
+    height: 82px;
+}
+
+
+.ht-100{
+    height: 100px;
+}
+
+.ht-110{
+    height: 110px;
+}
+
+.ht-111{
+    height: 111px;
+}
+
+.ht-112{
+    height: 112px;
+}
+
+.ht-115{
+    height: 115px;
+}
+
+.ht-120{
+    height: 120px;
+}
+
+
+.ht-300{
+    height: 300px;
+}
+
+/*Height End*/
+
+/*Width*/
+
+.wd-no{
+    width: 0;
+}
+
+.top-left-part {
+    width: 0 !important;
+}
+
+/*Width End*/
+
+/*Background*/
+
+.top-hd-bg1{
+    background-color: rosybrown;
+}
+
+.top-hd-bg2{
+    background-color: green;
+}
+
+.top-hd-bg3{
+    background-color: darkseagreen;
+}
+
+/*Background End*/
+
+/*Text Color*/
+
+.txt-color-main-blue{
+    color: #2cabe3;
+}
+
+.txt-color-logo{
+    color: #313030;
+}
+
+/*Text Color End*/
