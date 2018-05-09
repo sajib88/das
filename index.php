@@ -1,591 +1,315 @@
-<?php include('header.php') ?>
+<?php
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014 - 2018, British Columbia Institute of Technology
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package	CodeIgniter
+ * @author	EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2018, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	https://codeigniter.com
+ * @since	Version 1.0.0
+ * @filesource
+ */
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION ENVIRONMENT
+ *---------------------------------------------------------------
+ *
+ * You can load different configurations depending on your
+ * current environment. Setting the environment also influences
+ * things like logging and error reporting.
+ *
+ * This can be set to anything, but default usage is:
+ *
+ *     development
+ *     testing
+ *     production
+ *
+ * NOTE: If you change these, also change the error_reporting() code below
+ */
+	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+
+/*
+ *---------------------------------------------------------------
+ * ERROR REPORTING
+ *---------------------------------------------------------------
+ *
+ * Different environments will require different levels of error reporting.
+ * By default development will show errors but testing and live will hide them.
+ */
+switch (ENVIRONMENT)
+{
+	case 'development':
+		error_reporting(-1);
+		ini_set('display_errors', 1);
+	break;
+
+	case 'testing':
+	case 'production':
+		ini_set('display_errors', 0);
+		if (version_compare(PHP_VERSION, '5.3', '>='))
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+		}
+		else
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
+		}
+	break;
+
+	default:
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'The application environment is not set correctly.';
+		exit(1); // EXIT_ERROR
+}
+
+/*
+ *---------------------------------------------------------------
+ * SYSTEM DIRECTORY NAME
+ *---------------------------------------------------------------
+ *
+ * This variable must contain the name of your "system" directory.
+ * Set the path if it is not in the same directory as this file.
+ */
+	$system_path = 'system';
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION DIRECTORY NAME
+ *---------------------------------------------------------------
+ *
+ * If you want this front controller to use a different "application"
+ * directory than the default one you can set its name here. The directory
+ * can also be renamed or relocated anywhere on your server. If you do,
+ * use an absolute (full) server path.
+ * For more info please see the user guide:
+ *
+ * https://codeigniter.com/user_guide/general/managing_apps.html
+ *
+ * NO TRAILING SLASH!
+ */
+	$application_folder = 'application';
+
+/*
+ *---------------------------------------------------------------
+ * VIEW DIRECTORY NAME
+ *---------------------------------------------------------------
+ *
+ * If you want to move the view directory out of the application
+ * directory, set the path to it here. The directory can be renamed
+ * and relocated anywhere on your server. If blank, it will default
+ * to the standard location inside your application directory.
+ * If you do move this, use an absolute (full) server path.
+ *
+ * NO TRAILING SLASH!
+ */
+	$view_folder = '';
 
 
-<!--My admin Custom CSS -->
-<link href="assets/plugins/bower_components/owl.carousel/owl.carousel.min.css" rel="stylesheet" type="text/css" />
-<link href="assets/plugins/bower_components/owl.carousel/owl.theme.default.css" rel="stylesheet" type="text/css" />
+/*
+ * --------------------------------------------------------------------
+ * DEFAULT CONTROLLER
+ * --------------------------------------------------------------------
+ *
+ * Normally you will set your default controller in the routes.php file.
+ * You can, however, force a custom routing by hard-coding a
+ * specific controller class/function here. For most applications, you
+ * WILL NOT set your routing here, but it's an option for those
+ * special instances where you might want to override the standard
+ * routing in a specific front controller that shares a common CI installation.
+ *
+ * IMPORTANT: If you set the routing here, NO OTHER controller will be
+ * callable. In essence, this preference limits your application to ONE
+ * specific controller. Leave the function name blank if you need
+ * to call functions dynamically via the URI.
+ *
+ * Un-comment the $routing array below to use this feature
+ */
+	// The directory name, relative to the "controllers" directory.  Leave blank
+	// if your controller is not in a sub-directory within the "controllers" one
+	// $routing['directory'] = '';
 
-<!--Lightbox-->
-<link href="assets/js/image/ekko-lightbox.js" rel="stylesheet" type="text/css" />
-<link href="assets/js/image/ekko-lightbox.js.map" rel="stylesheet" type="text/css" />
+	// The controller class file name.  Example:  mycontroller
+	// $routing['controller'] = '';
 
-<!--Video-->
-<link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
-
-<!-- ============================================================== -->
-<!-- Page Content -->
-<!-- ============================================================== -->
-
-<div id="page-wrapper">
-    <!--    <div class="container-fluid">-->
-
-    <div class="row">
-        <!-- ============================================================== -->
-        <!-- start right sidebar -->
-        <!-- ============================================================== -->
-        <div class="right-sidebar">
-            <div class="slimscrollright">
-                <div class="rpanel-title"> Search Panel <span><i class="ti-close right-side-toggle"></i></span> </div>
-                <div class="r-panel-body">
+	// The controller function you wish to be called.
+	// $routing['function']	= '';
 
 
-                    <div class="sttabs tabs-style-iconbox">
-                        <nav>
-                            <ul>
-                                <li class="tab-current"><a href="#section-iconbox-1" class="sticon ti-home"><span>List Event</span></a></li>
-                                <li><a href="#section-iconbox-2" class="sticon ti-settings"><span>Search In Event</span></a></li>
-                            </ul>
-                        </nav>
-                        <div class="content-wrap">
-                            <section id="section-iconbox-1" class="content-current">
-                                <h3>List of Events</h3>
-                                <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
-                            </section>
-
-                            <section id="section-iconbox-2">
-                                <h2>Tabbing 5</h2>
-                            </section>
-                        </div>
-                        <!-- /content -->
-                    </div>
-                    <!-- /tabs -->
-                </div>
-            </div>
-        </div>
-        <!-- ============================================================== -->
-        <!-- end right sidebar -->
-        <!-- ============================================================== -->
-    </div>
-
-    <button class="right-side-toggle btn btn-info btn-circle set-position"><i class="fa fa-search"></i></button>
-
-    <!-- START carousel-->
-
-    <div class="row">
-
-        <div id="carousel-example-captions" data-ride="carousel" class="carousel slide">
-            <ol class="carousel-indicators">
-                <li data-target="#carousel-example-captions" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-example-captions" data-slide-to="1"></li>
-                <li data-target="#carousel-example-captions" data-slide-to="2"></li>
-            </ol>
-            <div role="listbox" class="carousel-inner">
-                <div class="item active"> <img src="assets/plugins/images/slider/slider_image1.png" alt="First slide image">
-                    <div class="carousel-caption">
-                        <h1 class="text-white font-3vw font-wt-600 width-100">Day Long Workshop on Embracing SDGs and Climate Action held at BUP </h1>
-                        <p class="text-white font-montserrat font-2vw font-wt-400 margin-btm-28"> [ 31 March, 2018] </p>
-                        <button class="btn btn-default-onslider btn-outline font-montserrat font-1vw top-46">Gallery</button>
-                    </div>
-                </div>
-                <div class="item"> <img src="assets/plugins/images/slider/slider_image6.jpg" alt="Second slide image">
-                    <div class="carousel-caption">
-                        <h1 class="text-white font-3vw font-wt-600">Day Long Workshop on Embracing SDGs and Climate Action held at BUP </h1>
-                        <p class="text-white font-montserrat font-2vw font-wt-400 margin-btm-28"> [ 31 March, 2018] </p>
-                        <button class="btn btn-default-onslider btn-outline text-transparent font-montserrat font-1vw">Gallery</button>
-                    </div>
-                </div>
-                <div class="item"> <img src="assets/plugins/images/slider/slider_image1.png" alt="Third slide image">
-                    <div class="carousel-caption">
-                        <h1 class="text-white font-3vw font-wt-600">Day Long Workshop on Embracing SDGs and Climate Action held at BUP </h1>
-                        <p class="text-white font-montserrat font-2vw font-wt-400 margin-btm-28"> [ 31 March, 2018] </p>
-                        <button class="btn btn-default-onslider btn-outline text-transparent font-montserrat font-1vw">Gallery</button>
-                    </div>
-                </div>
-            </div>
-            <a href="#carousel-example-captions" role="button" data-slide="prev" class="left carousel-control"> <span aria-hidden="true" class="fa fa-angle-left"></span> <span class="sr-only">Previous</span> </a>
-            <a href="#carousel-example-captions" role="button" data-slide="next" class="right carousel-control"> <span aria-hidden="true" class="fa fa-angle-right"></span> <span class="sr-only">Next</span> </a>
-        </div>
-    </div>
-
-    <!-- END carousel-->
-
-    <!-- Video-->
-    <div class="row bg-event-summary ht-380">
-        <button class="btn btn-default-onslider-video btn-outline text-transparent font-montserrat font-1vw set-position-video-btn">View More</button>
-        <div class="col-md-6 no-padding-horizontal p-t-0 m-t-0">
-            <video class="text-al-center" controls preload="auto" width="100%" poster="assets/video/speaker1.jpg" data-setup="{}">
-                <source src="assets/video/car.mp4" type='video/mp4'>
-                <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a web browser that
-                    <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                </p>
-            </video>
-        </div>
-
-        <div class="col-md-6 bg-event-summary right-pdd-15">
-            <h1 class="text-white text-al-left"><b> Dhaka, 31 March </b></h1>
-            <h3 class="text-white text-al-left">
-                A day-long workshop on the issue of climate change and
-                sustainable development was held at Bangladesh University of Professionals (BUP),
-                on 31st March 2018. The event was jointly organized by the Department of Law,
-                Faculty of Security and Strategic Studies (FSSS), BUP and SDG Lab-Bangladesh.
-                It was the third workshop organized by SDG Lab which is an initiative by a cohort of some
-            </h3>
-            <p class="text-al-center"><button class="btn btn-default-onslider btn-outline txt-color-white font-montserrat font-1vw">Read More</button></p>
-        </div>
-
-    </div>
-
-    <!-- Speakers-->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="white-box text-al-center margin-btm-0">
-                <div class="section-main-title"> Speakers </div>
-                <div class="section-sub-title"> Speakers of The Day </div>
-            </div>
-        </div>
-
-        <div class="ppb_speaker_grid p-0">
-            <div class="page_content_wrapper">
-                <div id="" data-columns="6">
-                    <div class="element grid one_fifth_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers1.jpeg">
-                            <img src="assets/image/speakers/speakers1.jpeg" alt="John Doe" class="">
-                            <div class="speaker_info_wrapper">
-                                <h4>John Doe</h4>
-                                <div class="speaker_desc">Founder Envato</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="element grid one_fifth_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers2.jpeg">
-                            <img src="assets/image/speakers/speakers2.jpeg" alt="Joanna Smith" class="">
-                            <div class="speaker_info_wrapper">
-                                <h4>Joanna Smith</h4>
-                                <div class="speaker_desc">VP Design Apple</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="element grid one_fifth_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers3.jpeg">
-                            <img src="assets/image/speakers/speakers3.jpeg" alt="Luis Gallop" class="">
-                            <div class="speaker_info_wrapper">
-                                <h4>Luis Gallop</h4>
-                                <div class="speaker_desc">Head Engineering Dell</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="element grid one_fifth_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers4.jpeg">
-                            <img src="assets/image/speakers/speakers4.jpeg" alt="Katie Stricker" class="">
-                            <div class="speaker_info_wrapper"><h4>Katie Stricker</h4>
-                                <div class="speaker_desc">Co-founder Blackbox</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="element grid one_fifth_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers5.jpeg">
-                            <img src="assets/image/speakers/speakers5.jpeg" alt="Espen Brunberg" class="">
-                            <div class="speaker_info_wrapper">
-                                <h4>Espen Brunberg</h4>
-                                <div class="speaker_desc">Web Technologist</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="element grid one_fifth_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers6.jpeg">
-                            <img src="assets/image/speakers/speakers6.jpeg" alt="Espen Brunberg" class="">
-                            <div class="speaker_info_wrapper">
-                                <h4>Espen Brunberg</h4>
-                                <div class="speaker_desc">Web Technologist</div>
-                            </div>
-                        </a>
-                    </div>
-                    <br class="clear">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Imaages-->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="white-box text-al-center margin-btm-0">
-                <div class="section-main-title"> Gallery </div>
-                <div class="section-sub-title"> Images of The Day </div>
-            </div>
-        </div>
-
-        <div class="ppb_gallery_grid p-0">
-            <div class="page_content_wrapper">
-                <div id="" class="bg-white" data-columns="6">
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers1.jpeg">
-                            <img src="assets/image/speakers/speakers1.jpeg" alt="John Doe" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers2.jpeg">
-                            <img src="assets/image/speakers/speakers2.jpeg" alt="Joanna Smith" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers3.jpeg">
-                            <img src="assets/image/speakers/speakers3.jpeg" alt="Luis Gallop" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers4.jpeg">
-                            <img src="assets/image/speakers/speakers4.jpeg" alt="Katie Stricker" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers5.jpeg">
-                            <img src="assets/image/speakers/speakers5.jpeg" alt="Espen Brunberg" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers4.jpeg">
-                            <img src="assets/image/speakers/speakers4.jpeg" alt="Espen Brunberg" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers5.jpeg">
-                            <img src="assets/image/speakers/speakers5.jpeg" alt="Espen Brunberg" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers6.jpeg">
-                            <img src="assets/image/speakers/speakers6.jpeg" alt="Katie Stricker" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers1.jpeg">
-                            <img src="assets/image/speakers/speakers1.jpeg" alt="John Doe" class="">
-                        </a>
-                    </div>
-                    <div class="element grid one_gallery_bg">
-                        <a class="speaker_grid_link" href="assets/image/speakers/speakers2.jpeg">
-                            <img src="assets/image/speakers/speakers2.jpeg" alt="Katie Stricker" class="">
-                        </a>
-                    </div>
-                    <br class="clear">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Audios-->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="white-box text-al-center margin-btm-0">
-                <div class="section-main-title"> Audios </div>
-                <div class="section-sub-title"> Audios of The Event </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="white-box top-pdd-5 no-padding-vertical margin-btm-0">
-                    <div class="tablesaw-bar mode-swipe tablesaw-all-cols-visible">
-                        <div class="tablesaw-advance">
-                            <a href="#" class="tablesaw-nav-btn btn btn-micro left disabled" title="Previous Column"></a>
-                            <a href="#" class="tablesaw-nav-btn btn btn-micro right disabled" title="Next Column"></a>
-                        </div>
-                    </div>
-
-                    <table class="tablesaw table-bordered table tablesaw-swipe full-color-table full-dark-table hover-table" data-tablesaw-mode="swipe" id="table-6280" style="">
-                        <thead>
-                        <tr>
-                            <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-sortable-default-col="" data-tablesaw-priority="3" width="4%">No.</th>
-                            <th scope="col" colspan="" data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class="tablesaw-cell-persist table-date-hide">File Name</th>
-                            <th scope="col" colspan="2" data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class="tablesaw-cell-persist text-al-center">Play Audio</th>
-                        </tr>
-                        <tbody>
-                        <tr>
-                            <td>1.</td>
-                            <td class="table-date-hide"><a href="#" data-toggle="modal" data-target="#modal-sound" class="txt-color-white">Titanic<p class="font-10">Uploaded By: Mr. Zaman &nbsp Date: 26.3.09</p></a></td>
-                            <td class="title tablesaw-cell-persist top-pdd-10">
-                                <audio id="music1" preload="metadata">
-                                    <source src="assets/audio/SampleAudio_0.4mb.mp3">
-                                </audio>
-                            </td>
-                            <td class="table-date-hide top-pdd-10"><a href="#" data-toggle="modal" data-target="#modal-sound" class="btn btn-info btn-sm">Preview</a></td>
-                        </tr>
-
-                        <tr>
-                            <td>2.</td>
-                            <td class="table-date-hide"><a href="#" data-toggle="modal" data-target="#modal-sound" class="txt-color-white">Titanic<p class="font-10">Uploaded By: Mr. Zaman &nbsp Date: 26.3.09</p></a></td>
-                            <td class="title tablesaw-cell-persist top-pdd-10">
-                                <audio id="music2" preload="metadata">
-                                    <source src="assets/audio/SampleAudio_0.4mb.mp3">
-                                </audio>
-                            </td>
-                            <td class="table-date-hide top-pdd-10"><a href="#" data-toggle="modal" data-target="#modal-sound" class="btn btn-info btn-sm">Preview</a></td>
-                        </tr>
-
-                        <tr>
-                            <td>3.</td>
-                            <td class="table-date-hide"><a href="#" data-toggle="modal" data-target="#modal-sound" class="txt-color-white">Titanic<p class="font-10">Uploaded By: Mr. Zaman &nbsp Date: 26.3.09</p></a></td>
-                            <td class="title tablesaw-cell-persist top-pdd-10">
-                                <audio id="music3" preload="metadata">
-                                    <source src="assets/audio/SampleAudio_0.4mb.mp3">
-                                </audio>
-                            </td>
-                            <td class="table-date-hide top-pdd-10"><a href="#" data-toggle="modal" data-target="#modal-sound" class="btn btn-info btn-sm">Preview</a></td>
-                        </tr>
-
-                        <tr>
-                            <td>4.</td>
-                            <td class="table-date-hide"><a href="#" data-toggle="modal" data-target="#modal-sound" class="txt-color-white">Titanic<p class="font-10">Uploaded By: Mr. Zaman &nbsp Date: 26.3.09</p></a></td>
-                            <td class="title tablesaw-cell-persist top-pdd-10">
-                                <audio id="music4" preload="metadata">
-                                    <source src="assets/audio/SampleAudio_0.4mb.mp3">
-                                </audio>
-                            </td>
-                            <td class="table-date-hide top-pdd-10"><a href="#" data-toggle="modal" data-target="#modal-sound" class="btn btn-info btn-sm">Preview</a></td>
-                        </tr>
-
-                        <tr>
-                            <td>5.</td>
-                            <td class="table-date-hide"><a href="#" data-toggle="modal" data-target="#modal-sound" class="txt-color-white">Titanic<p class="font-10">Uploaded By: Mr. Zaman &nbsp Date: 26.3.09</p></a></td>
-                            <td class="title tablesaw-cell-persist top-pdd-10">
-                                <audio id="music5" preload="metadata">
-                                    <source src="assets/audio/SampleAudio_0.4mb.mp3">
-                                </audio>
-                            </td>
-                            <td class="table-date-hide top-pdd-10"><a href="#" data-toggle="modal" data-target="#modal-sound" class="btn btn-info btn-sm">Preview</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Documetnts-->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="white-box text-al-center margin-btm-0">
-                <div class="section-main-title"> Documents </div>
-                <div class="section-sub-title"> Documents of The Event </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="white-box top-pdd-5 no-padding-vertical margin-btm-0">
-                    <div class="tablesaw-bar mode-swipe tablesaw-all-cols-visible">
-                        <div class="tablesaw-advance">
-                            <a href="#" class="tablesaw-nav-btn btn btn-micro left disabled" title="Previous Column"></a>
-                            <a href="#" class="tablesaw-nav-btn btn btn-micro right disabled" title="Next Column"></a>
-                        </div>
-                    </div>
-
-                    <table class="tablesaw table-bordered table tablesaw-swipe full-color-table full-inverse-table hover-table" data-tablesaw-mode="swipe" id="table-6280" style="">
-                        <thead>
-                        <tr>
-                            <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-sortable-default-col="" data-tablesaw-priority="3" width="4%">No.</th>
-                            <th scope="col" colspan="2" data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class="tablesaw-cell-persist">File Name</th>
-                            <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="" class="table-date-hide">Date</th>
-                            <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-sortable-default-col="" data-tablesaw-priority="3" width="1%"></th>
-                            <th scope="col" colspan="4" data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class="tablesaw-cell-persist text-al-center">Action</th>
-                            <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-sortable-default-col="" data-tablesaw-priority="3" width="4%"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1.</td>
-                            <td width="3%"><span class="fa fa-file-word-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Avatar<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2.</td>
-                            <td width="3%"><span class="fa fa-file-excel-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Titanic<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>3.</td>
-                            <td><span class="fa fa-file-pdf-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">The Avengers<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>4.</td>
-                            <td><span class="fa fa-file-powerpoint-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Harry Potter and the Deathly Hallows—Part 2<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>5.</td>
-                            <td><span class="fa fa-file-word-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Frozen<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>6.</td>
-                            <td><span class="fa fa-file-word-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Iron Man 3<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>7.</td>
-                            <td><span class="fa fa-file-word-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Transformers: Dark of the Moon<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>8.</td>
-                            <td><span class="fa fa-file-word-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Skyfall<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>9.</td>
-                            <td><span class="fa fa-file-word-o font-25 top-pdd-5"> </span></td>
-                            <td class="title tablesaw-cell-persist"><a href="javascript:void(0)" class="txt-color-white">Transformers: Age of Extinction<p class="font-10">Uploaded By: Mr. Zaman</p></a></td>
-                            <td class="table-date-hide">26.3.09</td>
-                            <td></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-eye font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-pencil-square-o font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)"><span class="fa fa-download font-15"> </span></a></td>
-                            <td width="1%"><a href="javascript:void(0)" class="txt-title-color-red"><span class="fa fa-trash-o font-15"> </span></a></td>
-                            <td></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
+/*
+ * -------------------------------------------------------------------
+ *  CUSTOM CONFIG VALUES
+ * -------------------------------------------------------------------
+ *
+ * The $assign_to_config array below will be passed dynamically to the
+ * config class when initialized. This allows you to set custom config
+ * items or override any default config values found in the config.php file.
+ * This can be handy as it permits you to share one application between
+ * multiple front controller files, with each file containing different
+ * config values.
+ *
+ * Un-comment the $assign_to_config array below to use this feature
+ */
+	// $assign_to_config['name_of_config_item'] = 'value of config item';
 
 
 
+// --------------------------------------------------------------------
+// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
+// --------------------------------------------------------------------
 
-</div>
+/*
+ * ---------------------------------------------------------------
+ *  Resolve the system path for increased reliability
+ * ---------------------------------------------------------------
+ */
 
-<script>
+	// Set the current directory correctly for CLI requests
+	if (defined('STDIN'))
+	{
+		chdir(dirname(__FILE__));
+	}
 
-    function call_modal(file_name)
-    {
-//        var url = '<?php //echo base_url(); ?>//assets/video/' + file_name;
-//        alert(file_name);
-//        video.pause();
-//        $('#play_video').attr('src', url);
-        $('#modal-video').modal('show');
-//        video.load();
-//        video.play();
+	if (($_temp = realpath($system_path)) !== FALSE)
+	{
+		$system_path = $_temp.DIRECTORY_SEPARATOR;
+	}
+	else
+	{
+		// Ensure there's a trailing slash
+		$system_path = strtr(
+			rtrim($system_path, '/\\'),
+			'/\\',
+			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+		).DIRECTORY_SEPARATOR;
+	}
 
-    }
+	// Is the system path correct?
+	if ( ! is_dir($system_path))
+	{
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'Your system folder path does not appear to be set correctly. Please open the following file and correct this: '.pathinfo(__FILE__, PATHINFO_BASENAME);
+		exit(3); // EXIT_CONFIG
+	}
 
-</script>
+/*
+ * -------------------------------------------------------------------
+ *  Now that we know the path, set the main path constants
+ * -------------------------------------------------------------------
+ */
+	// The name of THIS file
+	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
-<style>
-    .smallvjs{
-        width: 105px !important;
-        height: 65px  !important;
-    }
-    .video-js {
-        width: 100% !important;
-    }
-    .imageblok{
-        padding: 66px;
-    }
+	// Path to the system directory
+	define('BASEPATH', $system_path);
 
-</style>
+	// Path to the front controller (this file) directory
+	define('FCPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 
+	// Name of the "system" directory
+	define('SYSDIR', basename(BASEPATH));
 
-<div class="modal fade" id="modal-video">
-    <div class="modal-dialog modal-video" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="padding-15">
-                    <div class="row">
-                        <video id="my-video" class="video-js" controls preload="auto" height="305px"
-                               poster="assets/video/StoryVideo_PosterFrame.jpg" data-setup="{}">
-                            <source id="play_video" src="assets/video/bup_ad2.mp4" type='video/mp4'>
-                            <source src="MY_VIDEO.webm" type='assets/video/video/webm'>
-                            <p class="vjs-no-js">
-                                To view this video please enable JavaScript, and consider upgrading to a web browser that
-                                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                            </p>
-                        </video>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	// The path to the "application" directory
+	if (is_dir($application_folder))
+	{
+		if (($_temp = realpath($application_folder)) !== FALSE)
+		{
+			$application_folder = $_temp;
+		}
+		else
+		{
+			$application_folder = strtr(
+				rtrim($application_folder, '/\\'),
+				'/\\',
+				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+			);
+		}
+	}
+	elseif (is_dir(BASEPATH.$application_folder.DIRECTORY_SEPARATOR))
+	{
+		$application_folder = BASEPATH.strtr(
+			trim($application_folder, '/\\'),
+			'/\\',
+			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+		);
+	}
+	else
+	{
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'Your application folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
+		exit(3); // EXIT_CONFIG
+	}
 
-<div class="modal fade" id="modal-sound1">
-    <div class="modal-dialog modal-sound" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="padding-15">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4 class="white-box mrg-btm-30">Information This Audio File</h4>
-                            <ul class="list arrow bullet-danger">
-                                <li>Upload By Admin</li>
-                                <li>Uploaded 2-2-2018</li>
-                                <li>Category : BUP EVENT</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	define('APPPATH', $application_folder.DIRECTORY_SEPARATOR);
 
-<!-- jQuery for carousel -->
-<!--            <script src="assets/plugins/bower_components/owl.carousel/owl.carousel.min.js"></script>-->
-<!--            <script src="assets/plugins/bower_components/owl.carousel/owl.custom.js"></script>-->
+	// The path to the "views" directory
+	if ( ! isset($view_folder[0]) && is_dir(APPPATH.'views'.DIRECTORY_SEPARATOR))
+	{
+		$view_folder = APPPATH.'views';
+	}
+	elseif (is_dir($view_folder))
+	{
+		if (($_temp = realpath($view_folder)) !== FALSE)
+		{
+			$view_folder = $_temp;
+		}
+		else
+		{
+			$view_folder = strtr(
+				rtrim($view_folder, '/\\'),
+				'/\\',
+				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+			);
+		}
+	}
+	elseif (is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
+	{
+		$view_folder = APPPATH.strtr(
+			trim($view_folder, '/\\'),
+			'/\\',
+			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+		);
+	}
+	else
+	{
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
+		exit(3); // EXIT_CONFIG
+	}
 
-<!--Lightbox-->
-<!--<script src="page_javascript/dashboard/lightbox.js"></script>-->
+	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
 
-
-<?php include('footer.php') ?>
+/*
+ * --------------------------------------------------------------------
+ * LOAD THE BOOTSTRAP FILE
+ * --------------------------------------------------------------------
+ *
+ * And away we go...
+ */
+require_once BASEPATH.'core/CodeIgniter.php';
